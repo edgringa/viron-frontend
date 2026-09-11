@@ -1,14 +1,1551 @@
-Viron Search | Viron Ads
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viron Search | Viron Ads</title>
 
-Viron Ads
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-[ Criar conta ] [ Entrar ]
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f9fc;
+      color: #172033;
+    }
 
-quando logado:
+    header {
+      height: 64px;
+      background: #fff;
+      border-bottom: 1px solid #e5e9f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
 
-Conta: usuario@email.com
-Saldo: €0,00
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+    }
 
-[ Nova campanha ]
+    .logo span {
+      color: #2563eb;
+    }
 
-Minhas campanhas
+    nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    nav button {
+      border: 0;
+      background: transparent;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    nav button:hover {
+      background: #f0f4fa;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .search-area {
+      text-align: center;
+      padding: 90px 20px 40px;
+    }
+
+    .search-area h1 {
+      font-size: 52px;
+      margin: 0 0 12px;
+    }
+
+    .search-area p {
+      color: #64748b;
+      font-size: 16px;
+      margin-bottom: 28px;
+    }
+
+    .search-form {
+      max-width: 700px;
+      margin: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d7dee9;
+      border-radius: 9px;
+      font-size: 15px;
+      outline: none;
+      background: #fff;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #2563eb;
+    }
+
+    button.primary {
+      background: #2563eb;
+      color: white;
+      border: 0;
+      border-radius: 9px;
+      padding: 13px 20px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button.primary:hover {
+      background: #1d4ed8;
+    }
+
+    button.secondary {
+      background: #eef2f7;
+      border: 0;
+      padding: 13px 20px;
+      border-radius: 9px;
+      cursor: pointer;
+    }
+
+    .results {
+      max-width: 760px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .result {
+      background: white;
+      border: 1px solid #e5e9f0;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    .result.ad {
+      border-left: 4px solid #2563eb;
+      cursor: pointer;
+    }
+
+    .result h3 {
+      margin: 0 0 7px;
+      color: #1d4ed8;
+    }
+
+    .result p {
+      margin: 5px 0;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .ad-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: #2563eb;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e3e8f0;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    .account-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .account-info {
+      color: #475569;
+      line-height: 1.7;
+    }
+
+    .balance {
+      font-size: 22px;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #475569;
+    }
+
+    .campaign {
+      border: 1px solid #e3e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .campaign strong {
+      font-size: 17px;
+    }
+
+    .muted {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .message {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      display: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      border-radius: 14px;
+      padding: 28px;
+    }
+
+    .modal-box h2 {
+      margin-top: 0;
+    }
+
+    .modal-box input {
+      margin-bottom: 12px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 13px;
+      padding: 45px 20px;
+    }
+
+    @media (max-width: 700px) {
+      header {
+        padding: 0 14px;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      nav button {
+        padding: 8px;
+      }
+
+      .search-area h1 {
+        font-size: 36px;
+      }
+
+      .search-form {
+        flex-direction: column;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    Viron <span>Search</span> | Viron Ads
+  </div>
+
+  <nav>
+    <button onclick="showPanel('search')">
+      Viron Search
+    </button>
+
+    <button onclick="showPanel('ads')">
+      Viron Ads
+    </button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- VIR0N SEARCH -->
+
+  <section id="searchPanel" class="panel active">
+
+    <div class="search-area">
+
+      <h1>Viron Search</h1>
+
+      <p>
+        Pesquise na web com o Viron.
+      </p>
+
+      <form class="search-form" onsubmit="searchViron(event)">
+
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Digite sua pesquisa..."
+          autocomplete="off"
+          required
+        >
+
+        <button class="primary" type="submit">
+          Pesquisar
+        </button>
+
+      </form>
+
+    </div>
+
+    <div id="searchResults" class="results"></div>
+
+  </section>
+
+
+  <!-- VIRON ADS -->
+
+  <section id="adsPanel" class="panel">
+
+    <div class="container">
+
+      <!-- USUÁRIO DESLOGADO -->
+
+      <div id="loggedOut">
+
+        <div class="card">
+
+          <h2>Viron Ads</h2>
+
+          <p class="muted">
+            Crie e gerencie campanhas publicitárias no Viron.
+          </p>
+
+          <div style="display:flex;gap:10px;margin-top:20px;">
+
+            <button
+              class="primary"
+              onclick="openModal('register')"
+            >
+              Criar conta
+            </button>
+
+            <button
+              class="secondary"
+              onclick="openModal('login')"
+            >
+              Entrar
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- USUÁRIO LOGADO -->
+
+      <div id="loggedIn" style="display:none;">
+
+        <div class="account-bar card">
+
+          <div class="account-info">
+
+            <div>
+              Conta:
+              <strong id="accountEmail"></strong>
+            </div>
+
+            <div>
+              Saldo:
+            </div>
+
+            <div
+              class="balance"
+              id="accountBalance"
+            >
+              €0,00
+            </div>
+
+          </div>
+
+          <button
+            class="primary"
+            onclick="showCampaignForm()"
+          >
+            + Nova campanha
+          </button>
+
+          <button
+            class="secondary"
+            onclick="logout()"
+          >
+            Sair
+          </button>
+
+        </div>
+
+
+        <!-- FORMULÁRIO -->
+
+        <div
+          id="campaignForm"
+          class="card"
+          style="display:none;"
+        >
+
+          <h2>Nova campanha</h2>
+
+          <div class="form-grid">
+
+            <div>
+              <label>
+                Nome da campanha
+              </label>
+
+              <input
+                id="campaignName"
+                placeholder="Minha campanha"
+              >
+            </div>
+
+
+            <div>
+              <label>
+                Anunciante
+              </label>
+
+              <input
+                id="advertiser"
+                placeholder="Nome da empresa"
+              >
+            </div>
+
+
+            <div>
+              <label>
+                País
+              </label>
+
+              <input
+                id="country"
+                placeholder="Germany"
+              >
+            </div>
+
+
+            <div>
+              <label>
+                Idioma
+              </label>
+
+              <input
+                id="language"
+                placeholder="German"
+              >
+            </div>
+
+
+            <div>
+              <label>
+                Palavra-chave
+              </label>
+
+              <input
+                id="keyword"
+                placeholder="produto"
+              >
+            </div>
+
+
+            <div>
+              <label>
+                CPC máximo (€)
+              </label>
+
+              <input
+                id="cpc"
+                type="number"
+                min="0.01"
+                step="0.01"
+                placeholder="1.00"
+              >
+            </div>
+
+
+            <div class="full">
+
+              <label>
+                Título do anúncio
+              </label>
+
+              <input
+                id="adTitle"
+                placeholder="Título do anúncio"
+              >
+
+            </div>
+
+
+            <div class="full">
+
+              <label>
+                Descrição
+              </label>
+
+              <input
+                id="description"
+                placeholder="Descrição do anúncio"
+              >
+
+            </div>
+
+
+            <div class="full">
+
+              <label>
+                URL final
+              </label>
+
+              <input
+                id="finalUrl"
+                type="url"
+                placeholder="https://exemplo.com"
+              >
+
+            </div>
+
+
+            <div>
+
+              <label>
+                Orçamento diário (€)
+              </label>
+
+              <input
+                id="dailyBudget"
+                type="number"
+                min="0.01"
+                step="0.01"
+                placeholder="10.00"
+              >
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="primary"
+            style="margin-top:18px;"
+            onclick="createCampaign()"
+          >
+            Criar campanha
+          </button>
+
+
+          <div
+            id="campaignMessage"
+            class="message"
+          ></div>
+
+        </div>
+
+
+        <!-- CAMPANHAS -->
+
+        <div class="card">
+
+          <h2>
+            Minhas campanhas
+          </h2>
+
+          <div id="campaignList">
+
+            <p class="muted">
+              Nenhuma campanha criada ainda.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+  © 2026 Viron — Search & Ads
+</footer>
+
+
+<!-- LOGIN / CADASTRO -->
+
+<div id="modal" class="modal">
+
+  <div class="modal-box">
+
+    <h2 id="modalTitle">
+      Entrar
+    </h2>
+
+    <input
+      id="authEmail"
+      type="email"
+      placeholder="Seu e-mail"
+      autocomplete="email"
+    >
+
+    <input
+      id="authPassword"
+      type="password"
+      placeholder="Sua senha"
+      autocomplete="current-password"
+    >
+
+    <div class="modal-actions">
+
+      <button
+        class="primary"
+        onclick="submitAuth()"
+      >
+        Continuar
+      </button>
+
+      <button
+        class="secondary"
+        onclick="closeModal()"
+      >
+        Cancelar
+      </button>
+
+    </div>
+
+    <div
+      id="authMessage"
+      class="message"
+    ></div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const API =
+  "https://viron-w64u.onrender.com";
+
+let authMode = "login";
+
+let token =
+  localStorage.getItem("viron_token");
+
+
+
+/* PAINÉIS */
+
+function showPanel(panel) {
+
+  document
+    .getElementById("searchPanel")
+    .classList.remove("active");
+
+  document
+    .getElementById("adsPanel")
+    .classList.remove("active");
+
+
+  if (panel === "search") {
+
+    document
+      .getElementById("searchPanel")
+      .classList.add("active");
+
+  }
+
+
+  if (panel === "ads") {
+
+    document
+      .getElementById("adsPanel")
+      .classList.add("active");
+
+    if (token) {
+
+      loadAccount();
+
+    }
+
+  }
+
+}
+
+
+
+/* SEARCH */
+
+async function searchViron(event) {
+
+  event.preventDefault();
+
+  const keyword =
+    document
+      .getElementById("searchInput")
+      .value
+      .trim();
+
+  const results =
+    document
+      .getElementById("searchResults");
+
+
+  results.innerHTML =
+    "<p class='muted'>Pesquisando...</p>";
+
+
+  try {
+
+    const response =
+      await fetch(
+        API +
+        "/search?q=" +
+        encodeURIComponent(keyword)
+      );
+
+
+    const data =
+      await response.json();
+
+
+    results.innerHTML = "";
+
+
+    if (
+      !data.results ||
+      data.results.length === 0
+    ) {
+
+      results.innerHTML =
+        "<p class='muted'>Nenhum resultado encontrado.</p>";
+
+      return;
+
+    }
+
+
+    data.results.forEach(item => {
+
+      const div =
+        document.createElement("div");
+
+
+      div.className =
+        item.type === "ad"
+          ? "result ad"
+          : "result";
+
+
+      if (item.type === "ad") {
+
+        div.innerHTML = `
+
+          <div class="ad-label">
+            Anúncio
+          </div>
+
+          <h3>
+            ${escapeHtml(item.title || "")}
+          </h3>
+
+          <p>
+            ${escapeHtml(item.description || "")}
+          </p>
+
+        `;
+
+
+        div.onclick = () => {
+
+          if (item.id) {
+
+            window.open(
+              API +
+              "/ads/click/" +
+              item.id,
+              "_blank"
+            );
+
+          }
+
+        };
+
+      } else {
+
+        div.innerHTML = `
+
+          <h3>
+            ${escapeHtml(item.title || "")}
+          </h3>
+
+          <p>
+            ${escapeHtml(item.description || "")}
+          </p>
+
+        `;
+
+      }
+
+
+      results.appendChild(div);
+
+    });
+
+
+  } catch (error) {
+
+    results.innerHTML =
+      "<p class='muted'>Não foi possível conectar ao Viron Search.</p>";
+
+  }
+
+}
+
+
+
+/* MODAL */
+
+function openModal(mode) {
+
+  authMode = mode;
+
+
+  document
+    .getElementById("modalTitle")
+    .textContent =
+      mode === "login"
+        ? "Entrar no Viron Ads"
+        : "Criar conta";
+
+
+  document
+    .getElementById("authEmail")
+    .value = "";
+
+
+  document
+    .getElementById("authPassword")
+    .value = "";
+
+
+  document
+    .getElementById("authMessage")
+    .style.display = "none";
+
+
+  document
+    .getElementById("modal")
+    .classList.add("active");
+
+}
+
+
+
+function closeModal() {
+
+  document
+    .getElementById("modal")
+    .classList.remove("active");
+
+}
+
+
+
+/* LOGIN / CADASTRO */
+
+async function submitAuth() {
+
+  const email =
+    document
+      .getElementById("authEmail")
+      .value
+      .trim();
+
+
+  const password =
+    document
+      .getElementById("authPassword")
+      .value;
+
+
+  const message =
+    document
+      .getElementById("authMessage");
+
+
+  if (!email || !password) {
+
+    showMessage(
+      message,
+      "Preencha e-mail e senha."
+    );
+
+    return;
+
+  }
+
+
+  const endpoint =
+    authMode === "login"
+      ? "/auth/login"
+      : "/auth/register";
+
+
+  try {
+
+    const response =
+      await fetch(
+        API + endpoint,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            email,
+            password
+          })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      showMessage(
+        message,
+        data.error ||
+        "Não foi possível concluir."
+      );
+
+      return;
+
+    }
+
+
+    if (authMode === "register") {
+
+      showMessage(
+        message,
+        "Conta criada. Agora faça login."
+      );
+
+
+      authMode = "login";
+
+
+      document
+        .getElementById("modalTitle")
+        .textContent =
+          "Entrar no Viron Ads";
+
+
+      return;
+
+    }
+
+
+    token = data.token;
+
+
+    localStorage.setItem(
+      "viron_token",
+      token
+    );
+
+
+    closeModal();
+
+
+    await loadAccount();
+
+
+  } catch (error) {
+
+    showMessage(
+      message,
+      "Erro de conexão com o Viron."
+    );
+
+  }
+
+}
+
+
+
+/* CONTA */
+
+async function loadAccount() {
+
+  if (!token) return;
+
+
+  try {
+
+    const response =
+      await fetch(
+        API + "/auth/me",
+        {
+          headers: {
+            "Authorization":
+              "Bearer " + token
+          }
+        }
+      );
+
+
+    if (!response.ok) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    const user =
+      await response.json();
+
+
+    document
+      .getElementById("loggedOut")
+      .style.display = "none";
+
+
+    document
+      .getElementById("loggedIn")
+      .style.display = "block";
+
+
+    document
+      .getElementById("accountEmail")
+      .textContent =
+        user.email;
+
+
+    await loadWallet();
+
+    await loadCampaigns();
+
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+}
+
+
+
+/* CARTEIRA */
+
+async function loadWallet() {
+
+  try {
+
+    const response =
+      await fetch(
+        API + "/wallet",
+        {
+          headers: {
+            "Authorization":
+              "Bearer " + token
+          }
+        }
+      );
+
+
+    const wallet =
+      await response.json();
+
+
+    const balance =
+      Number(wallet.balance || 0);
+
+
+    document
+      .getElementById("accountBalance")
+      .textContent =
+        balance.toLocaleString(
+          "de-DE",
+          {
+            style: "currency",
+            currency: "EUR"
+          }
+        );
+
+
+  } catch (error) {
+
+    document
+      .getElementById("accountBalance")
+      .textContent =
+        "€0,00";
+
+  }
+
+}
+
+
+
+/* FORMULÁRIO DE CAMPANHA */
+
+function showCampaignForm() {
+
+  document
+    .getElementById("campaignForm")
+    .style.display = "block";
+
+
+  document
+    .getElementById("campaignForm")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+}
+
+
+
+/* CRIAR CAMPANHA */
+
+async function createCampaign() {
+
+  const message =
+    document
+      .getElementById("campaignMessage");
+
+
+  const payload = {
+
+    name:
+      document
+        .getElementById("campaignName")
+        .value
+        .trim(),
+
+    advertiser:
+      document
+        .getElementById("advertiser")
+        .value
+        .trim(),
+
+    country:
+      document
+        .getElementById("country")
+        .value
+        .trim(),
+
+    language:
+      document
+        .getElementById("language")
+        .value
+        .trim(),
+
+    keyword:
+      document
+        .getElementById("keyword")
+        .value
+        .trim(),
+
+    title:
+      document
+        .getElementById("adTitle")
+        .value
+        .trim(),
+
+    description:
+      document
+        .getElementById("description")
+        .value
+        .trim(),
+
+    final_url:
+      document
+        .getElementById("finalUrl")
+        .value
+        .trim(),
+
+    cpc:
+      Number(
+        document
+          .getElementById("cpc")
+          .value
+      ),
+
+    daily_budget:
+      Number(
+        document
+          .getElementById("dailyBudget")
+          .value
+      )
+
+  };
+
+
+  if (
+    !payload.name ||
+    !payload.advertiser ||
+    !payload.country ||
+    !payload.language ||
+    !payload.keyword ||
+    !payload.title ||
+    !payload.description ||
+    !payload.final_url ||
+    !payload.cpc ||
+    !payload.daily_budget
+  ) {
+
+    showMessage(
+      message,
+      "Preencha todos os campos."
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        API + "/ads/campaigns",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            "Authorization":
+              "Bearer " + token
+          },
+
+          body:
+            JSON.stringify(payload)
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      showMessage(
+        message,
+        data.error ||
+        "Não foi possível criar a campanha."
+      );
+
+      return;
+
+    }
+
+
+    showMessage(
+      message,
+      "Campanha criada com sucesso."
+    );
+
+
+    await loadCampaigns();
+
+
+  } catch (error) {
+
+    showMessage(
+      message,
+      "Erro de conexão com o Viron."
+    );
+
+  }
+
+}
+
+
+
+/* LISTAR CAMPANHAS */
+
+async function loadCampaigns() {
+
+  const list =
+    document
+      .getElementById("campaignList");
+
+
+  try {
+
+    const response =
+      await fetch(
+        API + "/ads/campaigns",
+        {
+          headers: {
+            "Authorization":
+              "Bearer " + token
+          }
+        }
+      );
+
+
+    const campaigns =
+      await response.json();
+
+
+    list.innerHTML = "";
+
+
+    if (!campaigns.length) {
+
+      list.innerHTML =
+        "<p class='muted'>Nenhuma campanha criada ainda.</p>";
+
+      return;
+
+    }
+
+
+    campaigns.forEach(campaign => {
+
+      const div =
+        document.createElement("div");
+
+
+      div.className =
+        "campaign";
+
+
+      div.innerHTML = `
+
+        <strong>
+          ${escapeHtml(
+            campaign.name ||
+            "Campanha"
+          )}
+        </strong>
+
+        <p class="muted">
+          Palavra-chave:
+          ${escapeHtml(
+            campaign.keyword || ""
+          )}
+        </p>
+
+        <p class="muted">
+
+          CPC:
+          €${Number(
+            campaign.cpc || 0
+          ).toFixed(2)}
+
+          |
+
+          Orçamento diário:
+          €${Number(
+            campaign.daily_budget || 0
+          ).toFixed(2)}
+
+        </p>
+
+      `;
+
+
+      list.appendChild(div);
+
+    });
+
+
+  } catch (error) {
+
+    list.innerHTML =
+      "<p class='muted'>Não foi possível carregar as campanhas.</p>";
+
+  }
+
+}
+
+
+
+/* LOGOUT */
+
+function logout() {
+
+  token = null;
+
+
+  localStorage.removeItem(
+    "viron_token"
+  );
+
+
+  document
+    .getElementById("loggedOut")
+    .style.display = "block";
+
+
+  document
+    .getElementById("loggedIn")
+    .style.display = "none";
+
+}
+
+
+
+/* MENSAGEM */
+
+function showMessage(
+  element,
+  text
+) {
+
+  element.textContent =
+    text;
+
+  element.style.display =
+    "block";
+
+}
+
+
+
+/* SEGURANÇA */
+
+function escapeHtml(value) {
+
+  return String(value)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
+
+
+
+/* LOGIN AUTOMÁTICO */
+
+if (token) {
+
+  loadAccount();
+
+}
+
+</script>
+
+</body>
+</html>
