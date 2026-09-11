@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Viron Search</title>
+  <meta name="description" content="Viron Search — pesquisa simples, rápida e independente.">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      color: #202124;
+      min-height: 100vh;
+    }
+
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      font-weight: 400;
+    }
+
+    main {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+
+    .brand {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -4px;
+      margin-bottom: 12px;
+    }
+
+    .brand span {
+      font-weight: 400;
+    }
+
+    .tagline {
+      color: #6b7280;
+      font-size: 16px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .search-area {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .search-box {
+      width: 100%;
+      height: 58px;
+      border: 1px solid #d9d9d9;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px 0 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: #777;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    }
+
+    .search-icon {
+      font-size: 21px;
+      color: #777;
+      margin-right: 12px;
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 17px;
+      background: transparent;
+      color: #202124;
+    }
+
+    input::placeholder {
+      color: #9aa0a6;
+    }
+
+    button {
+      border: none;
+      background: #111827;
+      color: white;
+      height: 42px;
+      padding: 0 22px;
+      border-radius: 22px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #000000;
+      transform: translateY(-1px);
+    }
+
+    .quick {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .quick span {
+      border: 1px solid #e5e7eb;
+      padding: 8px 14px;
+      border-radius: 20px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      padding: 18px;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    .results {
+      display: none;
+      width: 100%;
+      max-width: 760px;
+      margin-top: 35px;
+    }
+
+    .result {
+      padding: 18px 0;
+      border-bottom: 1px solid #eeeeee;
+    }
+
+    .result-title {
+      font-size: 19px;
+      color: #174ea6;
+      margin-bottom: 6px;
+    }
+
+    .result-url {
+      font-size: 13px;
+      color: #188038;
+      margin-bottom: 6px;
+    }
+
+    .result-text {
+      font-size: 14px;
+      color: #5f6368;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .brand {
+        font-size: 50px;
+      }
+
+      .search-box {
+        height: 54px;
+      }
+
+      button {
+        padding: 0 17px;
+      }
+
+      input {
+        font-size: 16px;
+      }
+
+      .tagline {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      Viron <span>Search</span>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="brand">
+      Viron<span>Search</span>
+    </div>
+
+    <div class="tagline">
+      Pesquise na web de forma simples, rápida e independente.
+    </div>
+
+    <div class="search-area">
+
+      <form class="search-box" id="searchForm">
+
+        <div class="search-icon">⌕</div>
+
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Pesquise na web..."
+          autocomplete="off"
+        >
+
+        <button type="submit">
+          Pesquisar
+        </button>
+
+      </form>
+
+      <div class="quick">
+        <span>Web</span>
+        <span>Notícias</span>
+        <span>Imagens</span>
+      </div>
+
+      <div class="results" id="results">
+
+        <div class="result">
+          <div class="result-title">
+            Resultado de pesquisa
+          </div>
+
+          <div class="result-url">
+            viron.search
+          </div>
+
+          <div class="result-text">
+            O mecanismo de busca do Viron está sendo construído.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    © 2026 Viron Search
+  </footer>
+
+  <script>
+    const form = document.getElementById("searchForm");
+    const input = document.getElementById("searchInput");
+    const results = document.getElementById("results");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const query = input.value.trim();
+
+      if (!query) {
+        input.focus();
+        return;
+      }
+
+      results.style.display = "block";
+
+      results.innerHTML = `
+        <div class="result">
+          <div class="result-title">
+            Pesquisa: ${escapeHtml(query)}
+          </div>
+
+          <div class="result-url">
+            Viron Search
+          </div>
+
+          <div class="result-text">
+            O sistema de resultados do Viron Search será conectado ao mecanismo de busca na próxima etapa.
+          </div>
+        </div>
+      `;
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+
+</body>
+</html>
