@@ -184,6 +184,18 @@
       line-height: 1.5;
     }
 
+    .loading {
+      color: #6b7280;
+      font-size: 14px;
+      padding: 18px 0;
+    }
+
+    .error {
+      color: #b91c1c;
+      font-size: 14px;
+      padding: 18px 0;
+    }
+
     @media (max-width: 600px) {
       .brand {
         font-size: 50px;
@@ -251,23 +263,7 @@
         <span>Imagens</span>
       </div>
 
-      <div class="results" id="results">
-
-        <div class="result">
-          <div class="result-title">
-            Resultado de pesquisa
-          </div>
-
-          <div class="result-url">
-            viron.search
-          </div>
-
-          <div class="result-text">
-            O mecanismo de busca do Viron está sendo construído.
-          </div>
-        </div>
-
-      </div>
+      <div class="results" id="results"></div>
 
     </div>
 
@@ -278,11 +274,30 @@
   </footer>
 
   <script>
+
     const form = document.getElementById("searchForm");
     const input = document.getElementById("searchInput");
     const results = document.getElementById("results");
 
-    form.addEventListener("submit", function(event) {
+    /*
+      ==========================================
+      URL DA API DO VIRON
+      ==========================================
+
+      COLOQUE AQUI A URL DO SEU SERVIÇO NO RENDER.
+
+      Exemplo:
+
+      const API_URL = "https://viron-api.onrender.com";
+
+      NÃO coloque /search no final.
+    */
+
+    const API_URL = "https://viron-w64u.onrender.com";
+
+
+    form.addEventListener("submit", async function(event) {
+
       event.preventDefault();
 
       const query = input.value.trim();
@@ -292,30 +307,110 @@
         return;
       }
 
+      // Mostra a área de resultados
       results.style.display = "block";
 
+      // Mostra carregando
       results.innerHTML = `
-        <div class="result">
-          <div class="result-title">
-            Pesquisa: ${escapeHtml(query)}
-          </div>
-
-          <div class="result-url">
-            Viron Search
-          </div>
-
-          <div class="result-text">
-            O sistema de resultados do Viron Search será conectado ao mecanismo de busca na próxima etapa.
-          </div>
+        <div class="loading">
+          Pesquisando por "${escapeHtml(query)}"...
         </div>
       `;
+
+
+      try {
+
+        // Envia a pesquisa para o Render
+        const response = await fetch(
+          `${API_URL}/search?q=${encodeURIComponent(query)}`
+        );
+
+
+        // Verifica se a API respondeu corretamente
+        if (!response.ok) {
+          throw new Error("Erro HTTP: " + response.status);
+        }
+
+
+        // Converte a resposta para JSON
+        const data = await response.json();
+
+
+        // Verifica se o Viron API informou sucesso
+        if (!data.ok) {
+          throw new Error("A API retornou um erro.");
+        }
+
+
+        // Se não houver resultados
+        if (!data.results || data.results.length === 0) {
+
+          results.innerHTML = `
+            <div class="result">
+              <div class="result-text">
+                Nenhum resultado encontrado.
+              </div>
+            </div>
+          `;
+
+          return;
+        }
+
+
+        // Mostra os resultados
+        results.innerHTML = data.results.map(result => `
+
+          <div class="result">
+
+            <div class="result-title">
+              ${escapeHtml(result.title)}
+            </div>
+
+            <div class="result-url">
+              ${escapeHtml(result.url)}
+            </div>
+
+            <div class="result-text">
+              ${escapeHtml(result.description)}
+            </div>
+
+          </div>
+
+        `).join("");
+
+
+      } catch (error) {
+
+        console.error("Erro na pesquisa:", error);
+
+        results.innerHTML = `
+          <div class="result">
+
+            <div class="result-title">
+              Não foi possível realizar a pesquisa
+            </div>
+
+            <div class="error">
+              O Viron Search não conseguiu conectar ao servidor.
+            </div>
+
+          </div>
+        `;
+      }
+
     });
 
+
     function escapeHtml(text) {
+
       const div = document.createElement("div");
+
       div.textContent = text;
+
       return div.innerHTML;
+
     }
+
   </script>
 
 </body>
