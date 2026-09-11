@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Viron Crawler</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    p {
+      color: #6b7280;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 16px;
+      margin: 15px 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border: 0;
+      border-radius: 10px;
+      background: #111827;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #f3f4f6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="card">
+
+      <h1>Viron Crawler</h1>
+
+      <p>
+        Adicione uma URL à fila de indexação do Viron.
+      </p>
+
+      <form id="crawlerForm">
+
+        <input
+          id="url"
+          type="url"
+          placeholder="https://example.com"
+          required
+        >
+
+        <button type="submit">
+          Adicionar à fila
+        </button>
+
+      </form>
+
+      <div id="resultado">
+        Aguardando uma URL...
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const API_URL = "https://viron-w64u.onrender.com";
+
+    const form = document.getElementById("crawlerForm");
+    const input = document.getElementById("url");
+    const resultado = document.getElementById("resultado");
+
+    form.addEventListener("submit", async function(event) {
+
+      event.preventDefault();
+
+      const url = input.value.trim();
+
+      if (!url) {
+        return;
+      }
+
+      resultado.textContent = "Enviando URL para o Viron...";
+
+      try {
+
+        const response = await fetch(`${API_URL}/crawl`, {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            url: url
+          })
+
+        });
+
+        const data = await response.json();
+
+        resultado.textContent =
+          JSON.stringify(data, null, 2);
+
+      } catch (error) {
+
+        console.error(error);
+
+        resultado.textContent =
+          "Erro ao conectar com o Viron API.";
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
