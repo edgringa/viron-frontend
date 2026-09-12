@@ -1213,70 +1213,68 @@ async function createCampaign() {
 
 
   const payload = {
+  campaign_name:
+    document
+      .getElementById("campaignName")
+      .value
+      .trim(),
 
-    name:
+  advertiser_name:
+    document
+      .getElementById("advertiser")
+      .value
+      .trim(),
+
+  country:
+    document
+      .getElementById("country")
+      .value
+      .trim(),
+
+  language:
+    document
+      .getElementById("language")
+      .value
+      .trim(),
+
+  keyword:
+    document
+      .getElementById("keyword")
+      .value
+      .trim(),
+
+  title:
+    document
+      .getElementById("adTitle")
+      .value
+      .trim(),
+
+  description:
+    document
+      .getElementById("description")
+      .value
+      .trim(),
+
+  final_url:
+    document
+      .getElementById("finalUrl")
+      .value
+      .trim(),
+
+  cpc:
+    Number(
       document
-        .getElementById("campaignName")
+        .getElementById("cpc")
         .value
-        .trim(),
+    ),
 
-    advertiser:
+  daily_budget:
+    Number(
       document
-        .getElementById("advertiser")
+        .getElementById("dailyBudget")
         .value
-        .trim(),
-
-    country:
-      document
-        .getElementById("country")
-        .value
-        .trim(),
-
-    language:
-      document
-        .getElementById("language")
-        .value
-        .trim(),
-
-    keyword:
-      document
-        .getElementById("keyword")
-        .value
-        .trim(),
-
-    title:
-      document
-        .getElementById("adTitle")
-        .value
-        .trim(),
-
-    description:
-      document
-        .getElementById("description")
-        .value
-        .trim(),
-
-    final_url:
-      document
-        .getElementById("finalUrl")
-        .value
-        .trim(),
-
-    cpc:
-      Number(
-        document
-          .getElementById("cpc")
-          .value
-      ),
-
-    daily_budget:
-      Number(
-        document
-          .getElementById("dailyBudget")
-          .value
-      )
-
-  };
+    )
+};
 
 
   const missing = [];
