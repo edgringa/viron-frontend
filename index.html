@@ -1279,26 +1279,25 @@ async function createCampaign() {
   };
 
 
-  if (
-    !payload.name ||
-    !payload.advertiser ||
-    !payload.country ||
-    !payload.language ||
-    !payload.keyword ||
-    !payload.title ||
-    !payload.description ||
-    !payload.final_url ||
-    !payload.cpc ||
-    !payload.daily_budget
-  ) {
+  const missing = [];
 
+  if (!payload.name) missing.push("Nome da campanha");
+  if (!payload.advertiser) missing.push("Anunciante");
+  if (!payload.country) missing.push("País");
+  if (!payload.language) missing.push("Idioma");
+  if (!payload.keyword) missing.push("Palavra-chave");
+  if (!payload.title) missing.push("Título do anúncio");
+  if (!payload.description) missing.push("Descrição");
+  if (!payload.final_url) missing.push("URL final");
+  if (!payload.cpc || payload.cpc <= 0) missing.push("CPC máximo");
+  if (!payload.daily_budget || payload.daily_budget <= 0) missing.push("Orçamento diário");
+
+  if (missing.length > 0) {
     showMessage(
       message,
-      "Preencha todos os campos."
+      "Campo(s) faltando: " + missing.join(", ") + "."
     );
-
     return;
-
   }
 
 
