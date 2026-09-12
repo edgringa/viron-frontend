@@ -1151,12 +1151,16 @@ async function loadWallet() {
       );
 
 
-    const wallet =
+    const data =
       await response.json();
 
 
     const balance =
-      Number(wallet.balance || 0);
+      Number(
+        (data.wallet && data.wallet.balance) ??
+        data.balance ??
+        0
+      );
 
 
     document
@@ -1213,89 +1217,91 @@ async function createCampaign() {
 
 
   const payload = {
-  campaign_name:
-    document
-      .getElementById("campaignName")
-      .value
-      .trim(),
 
-  advertiser_name:
-    document
-      .getElementById("advertiser")
-      .value
-      .trim(),
-
-  country:
-    document
-      .getElementById("country")
-      .value
-      .trim(),
-
-  language:
-    document
-      .getElementById("language")
-      .value
-      .trim(),
-
-  keyword:
-    document
-      .getElementById("keyword")
-      .value
-      .trim(),
-
-  title:
-    document
-      .getElementById("adTitle")
-      .value
-      .trim(),
-
-  description:
-    document
-      .getElementById("description")
-      .value
-      .trim(),
-
-  final_url:
-    document
-      .getElementById("finalUrl")
-      .value
-      .trim(),
-
-  cpc:
-    Number(
+    campaign_name:
       document
-        .getElementById("cpc")
+        .getElementById("campaignName")
         .value
-    ),
+        .trim(),
 
-  daily_budget:
-    Number(
+    advertiser_name:
       document
-        .getElementById("dailyBudget")
+        .getElementById("advertiser")
         .value
-    )
-};
+        .trim(),
+
+    country:
+      document
+        .getElementById("country")
+        .value
+        .trim(),
+
+    language:
+      document
+        .getElementById("language")
+        .value
+        .trim(),
+
+    keyword:
+      document
+        .getElementById("keyword")
+        .value
+        .trim(),
+
+    title:
+      document
+        .getElementById("adTitle")
+        .value
+        .trim(),
+
+    description:
+      document
+        .getElementById("description")
+        .value
+        .trim(),
+
+    final_url:
+      document
+        .getElementById("finalUrl")
+        .value
+        .trim(),
+
+    cpc:
+      Number(
+        document
+          .getElementById("cpc")
+          .value
+      ),
+
+    daily_budget:
+      Number(
+        document
+          .getElementById("dailyBudget")
+          .value
+      )
+
+  };
 
 
- const missing = [];
+  const missing = [];
 
-if (!payload.campaign_name) missing.push("Nome da campanha");
-if (!payload.advertiser_name) missing.push("Anunciante");
-if (!payload.country) missing.push("País");
-if (!payload.language) missing.push("Idioma");
-if (!payload.keyword) missing.push("Palavra-chave");
-if (!payload.title) missing.push("Título do anúncio");
-if (!payload.description) missing.push("Descrição");
-if (!payload.final_url) missing.push("URL final");
-if (!payload.cpc || payload.cpc <= 0) missing.push("CPC máximo");
-if (!payload.daily_budget || payload.daily_budget <= 0) missing.push("Orçamento diário");
+  if (!payload.campaign_name) missing.push("Nome da campanha");
+  if (!payload.advertiser_name) missing.push("Anunciante");
+  if (!payload.country) missing.push("País");
+  if (!payload.language) missing.push("Idioma");
+  if (!payload.keyword) missing.push("Palavra-chave");
+  if (!payload.title) missing.push("Título do anúncio");
+  if (!payload.description) missing.push("Descrição");
+  if (!payload.final_url) missing.push("URL final");
+  if (!payload.cpc || payload.cpc <= 0) missing.push("CPC máximo");
+  if (!payload.daily_budget || payload.daily_budget <= 0) missing.push("Orçamento diário");
 
-if (missing.length > 0) {
-  showMessage(
-    message,
-    "Campo(s) faltando: " + missing.join(", ") + "."
-  );
-  return;
+  if (missing.length > 0) {
+    showMessage(
+      message,
+      "Campo(s) faltando: " + missing.join(", ") + "."
+    );
+    return;
   }
 
 
@@ -1383,8 +1389,21 @@ async function loadCampaigns() {
       );
 
 
-    const campaigns =
+    const data =
       await response.json();
+
+
+    if (!response.ok) {
+      list.innerHTML =
+        "<p class='muted'>Não foi possível carregar as campanhas.</p>";
+      return;
+    }
+
+
+    const campaigns =
+      Array.isArray(data.campaigns)
+        ? data.campaigns
+        : [];
 
 
     list.innerHTML = "";
@@ -1414,7 +1433,7 @@ async function loadCampaigns() {
 
         <strong>
           ${escapeHtml(
-            campaign.name ||
+            campaign.campaign_name ||
             "Campanha"
           )}
         </strong>
